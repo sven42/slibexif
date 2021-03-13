@@ -19,13 +19,13 @@
  */
 package net.n12n.exif
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
 /**
  * @author niklas
  *
  */
-class ByteSeqTest extends FunSuite {
+class ByteSeqTest extends AnyFunSuite {
   private val array = Array[Byte](0, 0, 0, 1, 1, 0, 0, 0, 0xf, 0xf, 0xf)
   private val bseq = new ByteSeq(array)
   
