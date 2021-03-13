@@ -1,7 +1,6 @@
 //import com.typesafe.sbt.SbtSite.site
 import sbt._
 import Keys._
-import com.typesafe.sbt._
 
 version in ThisBuild := "1.1.0-SNAPSHOT"
 
@@ -26,7 +25,7 @@ lazy val slibexifSettings = commonSettings ++ Seq(
     if (isSnapshot.value)
       Some("snapshots" at nexus + "content/repositories/snapshots")
     else
-      Some("releases"  at nexus + "service/local/staging/deploy/maven2")
+      Some("releases" at nexus + "service/local/staging/deploy/maven2")
   },
   credentials += Credentials(Path.userHome / ".sbt" / "sonatype"),
   pomExtra := <url>https://github.com/ngrossmann/slibexif</url>
@@ -47,12 +46,11 @@ lazy val slibexifSettings = commonSettings ++ Seq(
         <url>https://github.com/ngrossmann</url>
       </developer>
     </developers>
-
 )
 
 lazy val slibexif = (project in file("."))
   .settings(slibexifSettings)
-  //.settings(site.settings : _*)//.settings(site.includeScaladoc() : _*)
+//.settings(site.settings : _*)//.settings(site.includeScaladoc() : _*)
 
 lazy val examples = (project in file("examples"))
   .dependsOn(slibexif)

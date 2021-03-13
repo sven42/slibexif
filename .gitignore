@@ -1,6 +1,6 @@
-.*
 target
 *~
 tests
 project/project
-
+/.bsp/
+/.idea/
