@@ -98,6 +98,8 @@ object ExifIfd {
   val Sharpness                = new ShortTag(41994, "Sharpness") with ExifTag[Int]
   val DeviceSettingDescription = new UndefinedTag(41995, "DeviceSettingDescription") with ExifTag[Undefined]
   val SubjectDistanceRange     = new ShortTag(41996, "SubjectDistanceRange") with ExifTag[Int]
+  val LensSpecification        = new RationalListTag(42034, "LensSpecification") with ExifTag[List[Rational]]
+  val LensModel                = new AsciiTag(42036, "LensModel") with ExifTag[String]
 
   val Tags = Set[ExifTag[_]](
     PixelXDimension,
@@ -155,6 +157,8 @@ object ExifIfd {
     Saturation,
     Sharpness,
     DeviceSettingDescription,
-    SubjectDistanceRange
+    SubjectDistanceRange,
+    LensSpecification,
+    LensModel
   )
 }
