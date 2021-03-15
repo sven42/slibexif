@@ -1,7 +1,7 @@
-/* 
+/*
  * slibexif - Scala library to parse JPEG EXIF data.
  * Copyright (C) Niklas Grossmann
- * 
+ *
  * This file is part of libexif.
  *
  * slibexif is free software: you can redistribute it and/or modify
@@ -21,12 +21,12 @@ package net.n12n.exif
 
 import java.io.InputStream
 
-private[exif]  class ByteStream(in: InputStream) extends Iterator[Int] {
+private[exif] class ByteStream(in: InputStream) extends Iterator[Int] {
   private var peek = in.read()
   override def next(): Int = if (peek != -1) {
-      val b = peek
-      peek = in.read()
-      return b
+    val b = peek
+    peek = in.read()
+    return b
   } else throw new IllegalStateException("Iterator reached end")
 
   override def hasNext() = peek != -1

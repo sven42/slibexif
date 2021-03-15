@@ -1,7 +1,7 @@
-/* 
+/*
  * slibexif - Scala library to parse JPEG EXIF data.
  * Copyright (C) Niklas Grossmann
- * 
+ *
  * This file is part of libexif.
  *
  * slibexif is free software: you can redistribute it and/or modify
@@ -30,22 +30,22 @@ class JpegMetaDataTest extends AnyFunSuite {
     assert(metadata.exif.isDefined, "Exif tag found")
     assert(metadata.comments.length === 1, "Comment found")
   }
-  
+
   assertResult(Orientation.LeftBottom, "Orientation") {
     val metadata = load("image-vertical.jpg")
     metadata.exif.get.orientation
   }
-  
+
   assertResult(Rational(48, 1), "GPS Data") {
     val metadata = load("image-gps.jpg")
     val lat = for {
-      exif <- metadata.exif
+      exif   <- metadata.exif
       gpsIfd <- exif.gpsIfd
-      value <- gpsIfd.findValue(GpsIfd.GPSLatitude)
+      value  <- gpsIfd.findValue(GpsIfd.GPSLatitude)
     } yield value.head
     lat.get
   }
-  
+
   assertResult(65, "All Attributes found") {
     val metadata = load("image-gps.jpg")
     metadata.exif.get.allAttrs.length

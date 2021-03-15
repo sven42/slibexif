@@ -1,7 +1,7 @@
-/* 
+/*
  * slibexif - Scala library to parse JPEG EXIF data.
  * Copyright (C) Niklas Grossmann
- * 
+ *
  * This file is part of libexif.
  *
  * slibexif is free software: you can redistribute it and/or modify
@@ -24,26 +24,23 @@ trait Tag {
   def name: String
 }
 
-/**
- * Create a marker tag.
- * @param marker Marking 2-byte sequence, must be in range 0x0 <= marker < 0x10000.
- * @param name Tag name. 
- */
+/** Create a marker tag.
+  * @param marker Marking 2-byte sequence, must be in range 0x0 <= marker < 0x10000.
+  * @param name Tag name.
+  */
 abstract class TagImpl(val marker: Int, val name: String) extends Tag {
   require(marker < 0x10000 && marker >= 0)
-  
-  /**
-   * Two tags are equal if they are of the exactly same type
-   * and have the same marker value.
-   * @return `true` If tags are equal. 
-   */
+
+  /** Two tags are equal if they are of the exactly same type
+    * and have the same marker value.
+    * @return `true` If tags are equal.
+    */
   override def equals(that: Any): Boolean = {
     if (that != null && that.isInstanceOf[Tag]) {
       val other = that.asInstanceOf[Tag]
       this.getClass() == that.getClass() && other.marker == marker
     } else false
   }
-  
+
   override def toString() = "%s(%04x)".format(name, marker)
 }
-

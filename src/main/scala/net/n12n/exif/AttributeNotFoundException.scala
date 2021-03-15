@@ -1,7 +1,7 @@
-/* 
+/*
  * slibexif - Scala library to parse JPEG EXIF data.
  * Copyright (C) Niklas Grossmann
- * 
+ *
  * This file is part of libexif.
  *
  * slibexif is free software: you can redistribute it and/or modify
@@ -20,8 +20,6 @@
 
 package net.n12n.exif
 
-/**
- * Exception thrown by [[net.n12n.exif.Ifd]] ``attr`` methods in case the attribute was not found.
- */
-case class AttributeNotFoundException(tag: String) 
-  extends Exception("Attribute %s is not set".format(tag))
+/** Exception thrown by [[net.n12n.exif.Ifd]] ``attr`` methods in case the attribute was not found.
+  */
+case class AttributeNotFoundException(tag: String) extends Exception("Attribute %s is not set".format(tag))

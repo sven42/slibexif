@@ -1,7 +1,7 @@
-/* 
+/*
  * slibexif - Scala library to parse JPEG EXIF data.
  * Copyright (C) Niklas Grossmann
- * 
+ *
  * This file is part of libexif.
  *
  * slibexif is free software: you can redistribute it and/or modify
@@ -21,7 +21,7 @@
 package net.n12n.exif
 
 object ByteSeq {
-  
+
   def apply(len: Int, in: Iterator[Int]): ByteSeq = {
     val a = new Array[Byte](len)
     for (i <- 0 until len)
@@ -31,69 +31,67 @@ object ByteSeq {
         throw new IllegalArgumentException("Failed to read " + len + " bytes form data stream")
     new ByteSeq(a)
   }
-  def apply(ints: Array[Int]) = new ByteSeq(ints.map(_.toByte))
-  def apply(vals: Int*):ByteSeq = new ByteSeq(vals.map(_.toByte).toArray)
-  def apply(s: String): ByteSeq = new ByteSeq(s.getBytes("ASCII"))
+  def apply(ints: Array[Int])    = new ByteSeq(ints.map(_.toByte))
+  def apply(vals: Int*): ByteSeq = new ByteSeq(vals.map(_.toByte).toArray)
+  def apply(s: String): ByteSeq  = new ByteSeq(s.getBytes("ASCII"))
 }
 
-/**
- * A sequence of bytes which may be converted to different types.
- */
+/** A sequence of bytes which may be converted to different types.
+  */
 class ByteSeq(a: Array[Byte]) {
   import ByteOrder._
   private val array = a
-  val length = array.length
-  
+  val length        = array.length
+
   def bytes(i: Int): Byte = array(i)
-  
+
   override def equals(other: Any): Boolean = other match {
-    case bs: ByteSeq if (bs.length == length) => array.zip(bs.array).forall((t) => t._1 == t._2) 
-    case _ => false;
+    case bs: ByteSeq if (bs.length == length) => array.zip(bs.array).forall((t) => t._1 == t._2)
+    case _                                    => false;
   }
 
   override def hashCode() = array.product
-  
-  def slice(start:Int, end: Int = length) = new ByteSeq(array.slice(start, end))
-  
+
+  def slice(start: Int, end: Int = length) = new ByteSeq(array.slice(start, end))
+
   def toArray(): Array[Byte] = {
     val a = new Array[Byte](length)
     Array.copy(array, 0, a, 0, length)
     a
   }
   def toShort(offset: Int, byteOrder: ByteOrder): Int = toNumber(offset, byteOrder, Type.Short.size).toInt
-  
-  def toSignedShort(offset: Int, byteOrder: ByteOrder) = 
+
+  def toSignedShort(offset: Int, byteOrder: ByteOrder) =
     toNumber(offset, byteOrder, Type.Short.size).toShort
-  
+
   def toLong(offset: Int, byteOrder: ByteOrder): Long = toNumber(offset, byteOrder, Type.Long.size)
-  
-  def toSignedLong(offset: Int, byteOrder: ByteOrder) = 
+
+  def toSignedLong(offset: Int, byteOrder: ByteOrder) =
     toNumber(offset, byteOrder, Type.Long.size).toInt
-  
-  def toRational(offset: Int, byteOrder: ByteOrder) = 
+
+  def toRational(offset: Int, byteOrder: ByteOrder) =
     new Rational(toLong(offset, byteOrder), toLong(offset + Type.Long.size, byteOrder))
-  
-  def toSignedRational(offset: Int, byteOrder: ByteOrder) = 
+
+  def toSignedRational(offset: Int, byteOrder: ByteOrder) =
     new SignedRational(toSignedLong(offset, byteOrder), toSignedLong(offset + Type.Long.size, byteOrder))
-  
+
   private def toNumber(offset: Int, byteOrder: ByteOrder, size: Int): Long = {
-    val offsets = if (byteOrder == ByteOrder.LittleEndian) (offset until offset + size).reverse 
-      else (offset until offset + size)  
+    val offsets =
+      if (byteOrder == ByteOrder.LittleEndian) (offset until offset + size).reverse
+      else (offset until offset + size)
     val values = offsets.map(bytes(_)).map(toLong(_)) // Values in big-endian order
     values.reduceLeft((n, m) => (n << 8) + m)
   }
-  
-  private def toLong(byte: Byte): Long = if (byte >= 0)  byte.toLong else 0x100L + byte
-  
-  override def toString() = "[" + array.map(
-      (b) => (if (b < 0) 256 + b else b.toInt).toHexString).mkString(" ") + "]"
-  
-  /**
-   * Read a zero terminated string.
-   * @param start Start of string.
-   * @param encoding Character encoding.
-   * @return Bytes converted to string.
-   */
+
+  private def toLong(byte: Byte): Long = if (byte >= 0) byte.toLong else 0x100L + byte
+
+  override def toString() = "[" + array.map((b) => (if (b < 0) 256 + b else b.toInt).toHexString).mkString(" ") + "]"
+
+  /** Read a zero terminated string.
+    * @param start Start of string.
+    * @param encoding Character encoding.
+    * @return Bytes converted to string.
+    */
   def zstring(start: Int, encoding: String = "ASCII"): String = {
     val end = array.indexOf(0, start)
     new String(array, start, if (end == -1) array.length else end, encoding)

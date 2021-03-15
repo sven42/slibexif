@@ -1,7 +1,7 @@
-/* 
+/*
  * slibexif - Scala library to parse JPEG EXIF data.
  * Copyright (C) Niklas Grossmann
- * 
+ *
  * This file is part of libexif.
  *
  * slibexif is free software: you can redistribute it and/or modify
@@ -20,11 +20,9 @@
 package net.n12n.exif
 
 /**
- * 
- *
- */
+  */
 object ByteOrder extends Enumeration {
   type ByteOrder = Value
   val LittleEndian = Value(0x4949)
-  val BigEndian = Value(0x4d4d)
+  val BigEndian    = Value(0x4d4d)
 }

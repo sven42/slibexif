@@ -1,7 +1,7 @@
-/* 
+/*
  * slibexif - Scala library to parse JPEG EXIF data.
  * Copyright (C) Niklas Grossmann
- * 
+ *
  * This file is part of libexif.
  *
  * slibexif is free software: you can redistribute it and/or modify
@@ -20,7 +20,7 @@
 
 package net.n12n.exif
 
-import ByteOrder._
+import net.n12n.exif.ByteOrder._
 
 trait TypedTag[T] extends Tag {
   val marker: Int
@@ -28,14 +28,18 @@ trait TypedTag[T] extends Tag {
   def value(attr: IfdAttribute, order: ByteOrder): T
 }
 
-private[exif] class ValueTag[T : TypeConverter](marker: Int, name: String) extends TagImpl(marker, name) with TypedTag[T] {
+private[exif] class ValueTag[T: TypeConverter](marker: Int, name: String)
+    extends TagImpl(marker, name)
+    with TypedTag[T] {
   def value(attr: IfdAttribute, order: ByteOrder): T = {
     val genType = implicitly[TypeConverter[T]]
     genType.toScala(attr, order).head
   }
 }
 
-private[exif] class ListTag[T : TypeConverter](marker: Int, name: String) extends TagImpl(marker, name) with TypedTag[List[T]] {
+private[exif] class ListTag[T: TypeConverter](marker: Int, name: String)
+    extends TagImpl(marker, name)
+    with TypedTag[List[T]] {
   def value(attr: IfdAttribute, order: ByteOrder): List[T] = {
     val converter = implicitly[TypeConverter[T]]
     converter.toScala(attr, order)

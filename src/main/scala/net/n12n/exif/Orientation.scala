@@ -1,7 +1,7 @@
-/* 
+/*
  * slibexif - Scala library to parse JPEG EXIF data.
  * Copyright (C) Niklas Grossmann
- * 
+ *
  * This file is part of libexif.
  *
  * slibexif is free software: you can redistribute it and/or modify
@@ -20,25 +20,32 @@
 
 package net.n12n.exif
 
-/**
- * Image orientation.
- */
+/** Image orientation.
+  */
 object Orientation extends Enumeration {
   type Orientation = Value
+
   /** The 0th row is at the visual top of the image, and the 0th column is the visual left-hand side. */
   val TopLeft = Value(1)
+
   /** The 0th row is at the visual top of the image, and the 0th column is the visual right-hand side. */
   val TopRight = Value(2)
+
   /** The 0th row is at the visual bottom of the image, and the 0th column is the visual right-hand side. */
   val BottomRight = Value(3)
+
   /** The 0th row is at the visual bottom of the image, and the 0th column is the visual left-hand side. */
   val BottomLeft = Value(4)
+
   /** The 0th row is the visual left-hand side of the image, and the 0th column is the visual top. */
   val LeftTop = Value(5)
+
   /** The 0th row is the visual right-hand side of the image, and the 0th column is the visual top. */
   val RightTop = Value(6)
+
   /** The 0th row is the visual right-hand side of the image, and the 0th column is the visual bottom. */
   val RightBottom = Value(7)
+
   /** The 0th row is the visual left-hand side of the image, and the 0th column is the visual bottom. */
   val LeftBottom = Value(8)
 }

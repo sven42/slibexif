@@ -1,7 +1,7 @@
-/* 
+/*
  * slibexif - Scala library to parse JPEG EXIF data.
  * Copyright (C) Niklas Grossmann
- * 
+ *
  * This file is part of libexif.
  *
  * slibexif is free software: you can redistribute it and/or modify
@@ -21,10 +21,10 @@ package net.n12n.exif
 
 case class Rational(val numerator: Long, val denominator: Long) {
   override def toString = numerator + "/" + denominator
-  def toDouble() = numerator.toDouble / denominator.toDouble
+  def toDouble()        = numerator.toDouble / denominator.toDouble
 }
 
 case class SignedRational(val numerator: Int, val denominator: Int) {
   override def toString = numerator + "/" + denominator
-  def toDouble() = numerator.toDouble / denominator.toDouble
+  def toDouble()        = numerator.toDouble / denominator.toDouble
 }
