@@ -19,6 +19,8 @@
  */
 package net.n12n.exif
 
+import scala.util.Try
+
 /** Image-File-Directory (IFD) structure.
   * An IFD is a container for [[net.n12n.exif.IfdAttribute]]s.
   *
@@ -32,9 +34,24 @@ abstract class Ifd(exif: ExifSegment, offset: Int, val name: String) {
   /** Set of tags. */
   val Tags: Set[TagType]
   val count = exif.data.toShort(exif.tiffOffset + offset, exif.byteOrder)
-  lazy val attributes: Seq[IfdAttribute] =
-    for (i <- 0 until count)
-      yield IfdAttribute(exif.data, offset + 2 + i * IfdAttribute.Length, exif.tiffOffset, exif.byteOrder, findTag)
+
+  lazy val (attributes: Seq[IfdAttribute], attributeExceptions: Seq[Throwable]) = {
+    val tries: Seq[Try[IfdAttribute]] =
+      for (i <- 0 until count)
+        yield Try {
+          IfdAttribute(
+            exif.data,
+            offset + 2 + i * IfdAttribute.Length,
+            exif.tiffOffset,
+            exif.byteOrder,
+            findTag
+          )
+        }
+    val (successes, failures) = tries.partition(_.isSuccess)
+
+    (successes.map(_.get), failures.map(_.failed.get))
+  }
+
   lazy val tags: Seq[TypedTag[_]] = attributes.map(_.tag)
 
   /** Offset to next IDF relative to the Exif's TiffHeader.
@@ -72,14 +89,16 @@ abstract class Ifd(exif: ExifSegment, offset: Int, val name: String) {
 
   protected def createTag(marker: Int, tagType: Type, count: Int): TypedTag[_] = {
     tagType match {
-      case Type.Ascii                 => new AsciiTag(marker, "Unknown")
-      case Type.Byte                  => new ByteTag(marker, "Unknown")
-      case Type.Undefined             => new UndefinedTag(marker, "Unknown")
-      case Type.Long if (count == 1)  => new LongTag(marker, "Unknown")
-      case Type.Long                  => new LongListTag(marker, "Unknown")
-      case Type.Short if (count == 1) => new ShortTag(marker, "Unknown")
-      case Type.Short                 => new ShortListTag(marker, "Unknown")
-      case _                          => throw new IllegalArgumentException("Tag %x of type %s".format(marker, tagType))
+      case Type.Ascii                  => new AsciiTag(marker, "Unknown")
+      case Type.Byte                   => new ByteTag(marker, "Unknown")
+      case Type.Undefined              => new UndefinedTag(marker, "Unknown")
+      case Type.Long if count == 1     => new LongTag(marker, "Unknown")
+      case Type.Long                   => new LongListTag(marker, "Unknown")
+      case Type.Short if count == 1    => new ShortTag(marker, "Unknown")
+      case Type.Short                  => new ShortListTag(marker, "Unknown")
+      case Type.Rational if count == 1 => new RationalTag(marker, "Unknown")
+      case Type.Rational               => new RationalListTag(marker, "Unknown")
+      case _                           => throw new IllegalArgumentException("Tag %x of type %s".format(marker, tagType))
     }
   }
 

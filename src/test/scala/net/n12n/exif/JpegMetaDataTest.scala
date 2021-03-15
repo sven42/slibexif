@@ -27,7 +27,7 @@ class JpegMetaDataTest extends AnyFunSuite {
 
   test("Read JPEG meta-data") {
     val metadata = load("image.jpg")
-    assert(metadata.exif.isDefined, "Exif tag found")
+    assert(metadata.exif != None, "Exif tag found")
     assert(metadata.comments.length === 1, "Comment found")
   }
 
@@ -42,7 +42,7 @@ class JpegMetaDataTest extends AnyFunSuite {
       exif   <- metadata.exif
       gpsIfd <- exif.gpsIfd
       value  <- gpsIfd.findValue(GpsIfd.GPSLatitude)
-    } yield value.head
+    } yield value(0)
     lat.get
   }
 
