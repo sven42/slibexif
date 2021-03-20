@@ -2,7 +2,7 @@
 import sbt._
 import Keys._
 
-version in ThisBuild := "1.1.0-SNAPSHOT"
+version in ThisBuild := "0.3.2-SNAPSHOT"
 
 val dependencies = Seq(
   "org.scalatest" %% "scalatest" % "3.2.6" % "test" cross CrossVersion.binary
