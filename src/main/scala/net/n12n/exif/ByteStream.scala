@@ -29,5 +29,5 @@ private[exif] class ByteStream(in: InputStream) extends Iterator[Int] {
     return b
   } else throw new IllegalStateException("Iterator reached end")
 
-  override def hasNext() = peek != -1
+  override def hasNext = peek != -1
 }

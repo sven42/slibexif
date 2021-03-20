@@ -28,7 +28,7 @@ object Exif extends App {
       System.exit(2)
   }
 
-  private def usage() {
+  private def usage(): Unit = {
     System.err.println("Usage: Exif <path>")
     System.exit(1)
   }

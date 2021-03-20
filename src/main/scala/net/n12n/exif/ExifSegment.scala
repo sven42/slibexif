@@ -47,7 +47,7 @@ class ExifSegment(length: Int, data: ByteSeq, offset: Int = 0) extends Segment(S
   private val name             = data.zstring(offset)
 
   /** Byte order as given in TIFF segment. */
-  val byteOrder =
+  val byteOrder: ByteOrder.Value =
     if (data.slice(tiffOffset, tiffOffset + 2) == LittleEndianMarker)
       ByteOrder.LittleEndian
     else ByteOrder.BigEndian
@@ -65,16 +65,17 @@ class ExifSegment(length: Int, data: ByteSeq, offset: Int = 0) extends Segment(S
 
   /** Optional Exif IFD. */
   val exifIfd: Option[ExifIfd] =
-    ifd0.findValue(TiffIfd.ExifIfdPointer).map((pointer) => new ExifIfd(this, pointer.toInt))
+    ifd0.findValue(TiffIfd.ExifIfdPointer).map(pointer => new ExifIfd(this, pointer.toInt))
 
   /** Optional GPS IFD. */
   val gpsIfd: Option[GpsIfd] = ifd0.findValue(TiffIfd.GpsInfoIfdPointer).map(pointer => new GpsIfd(this, pointer.toInt))
 
   /** List of all IFDs in this Exif segment. */
-  lazy val ifds = ifd0 :: ifd1.toList ::: exifIfd.toList ::: gpsIfd.toList
+  lazy val ifds: List[Ifd] = ifd0 :: ifd1.toList ::: exifIfd.toList ::: gpsIfd.toList
 
   /** List of all attributes of all IFDs of this segment. */
-  lazy val allAttrs: List[IfdAttribute] = ifds.flatMap(_.attributes)
+  lazy val allAttrs: List[IfdAttribute]      = ifds.flatMap(_.attributes)
+  lazy val allAttrExceptions: Seq[Throwable] = ifds.flatMap(_.attributeExceptions)
 
   /** Image orientation.
     * {{{
@@ -140,7 +141,7 @@ class ExifSegment(length: Int, data: ByteSeq, offset: Int = 0) extends Segment(S
     */
   def value[T](tag: GpsTag[T]): Option[T] = findAttr(tag).map(tag.value(_, byteOrder))
 
-  override def toString = {
+  override def toString: String = {
     val opt2string = (opt: Option[_]) => opt.map(_.toString).getOrElse("not set")
     "ExifSegment(%s, %x bytes)\nIFD0: %s\nIFD1\n%s\nExifIFD: %s\nGPS IFD: %s".format(
       name,

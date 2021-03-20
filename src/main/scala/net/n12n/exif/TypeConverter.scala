@@ -56,7 +56,7 @@ private[exif] object TypeConverter {
 
   implicit val undefinedConverter = new SimpleTypeConverter[Undefined](7, 1, "UNDEFINED", true) {
     override protected def toScala(data: ByteSeq, offset: Int, order: ByteOrder) =
-      new Undefined(data.slice(offset, data.length - offset).toArray())
+      new Undefined(data.slice(offset, data.length - offset).toArray)
   }
 
   implicit val signedRationalConverter = new SimpleTypeConverter[SignedRational](10, 8, "SRATIONAL") {

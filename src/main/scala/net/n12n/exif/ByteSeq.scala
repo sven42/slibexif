@@ -26,7 +26,7 @@ object ByteSeq {
     val a = new Array[Byte](len)
     for (i <- 0 until len)
       if (in.hasNext)
-        a(i) = in.next.toByte
+        a(i) = in.next().toByte
       else
         throw new IllegalArgumentException("Failed to read " + len + " bytes form data stream")
     new ByteSeq(a)
@@ -54,7 +54,7 @@ class ByteSeq(a: Array[Byte]) {
 
   def slice(start: Int, end: Int = length) = new ByteSeq(array.slice(start, end))
 
-  def toArray(): Array[Byte] = {
+  def toArray: Array[Byte] = {
     val a = new Array[Byte](length)
     Array.copy(array, 0, a, 0, length)
     a

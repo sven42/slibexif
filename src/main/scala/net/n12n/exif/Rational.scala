@@ -20,11 +20,11 @@
 package net.n12n.exif
 
 case class Rational(val numerator: Long, val denominator: Long) {
-  override def toString = numerator + "/" + denominator
+  override def toString = numerator.toString + "/" + denominator
   def toDouble()        = numerator.toDouble / denominator.toDouble
 }
 
 case class SignedRational(val numerator: Int, val denominator: Int) {
-  override def toString = numerator + "/" + denominator
+  override def toString = numerator.toString + "/" + denominator
   def toDouble()        = numerator.toDouble / denominator.toDouble
 }
